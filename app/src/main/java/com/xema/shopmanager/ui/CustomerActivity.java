@@ -18,7 +18,6 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -31,7 +30,6 @@ import com.xema.shopmanager.model.wrapper.ProductWrapper;
 import com.xema.shopmanager.utils.CommonUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -42,7 +40,6 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 // TODO: 2018-02-26 sales 추가하고나서 refresh
 // TODO: 2018-02-26 정렬은 쿼리문 단계에서 구분하고 preference에 저장. 한번 선택한 정렬형식이 계속 가도록
@@ -85,6 +82,8 @@ public class CustomerActivity extends AppCompatActivity implements NavigationVie
         queryCustomers();
     }
 
+
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();

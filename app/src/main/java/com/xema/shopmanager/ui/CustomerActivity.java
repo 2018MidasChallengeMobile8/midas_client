@@ -17,13 +17,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.xema.shopmanager.R;
 import com.xema.shopmanager.adapter.PersonAdapter;
 import com.xema.shopmanager.common.Constants;
+import com.xema.shopmanager.data.PostsRepository;
 import com.xema.shopmanager.model.Person;
 import com.xema.shopmanager.model.Sales;
 import com.xema.shopmanager.model.wrapper.ProductWrapper;
@@ -63,6 +63,7 @@ public class CustomerActivity extends AppCompatActivity implements NavigationVie
 
     private List<Person> mList;
     private PersonAdapter mAdapter;
+    private PostsRepository repository;
 
     private enum Sort {
         NAME, RECENT, PRICE, CREATE, VISIT
@@ -73,6 +74,7 @@ public class CustomerActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer);
         realm = Realm.getDefaultInstance();
+        repository = new PostsRepository(this);
         ButterKnife.bind(this);
 
         initToolbar();
@@ -83,7 +85,7 @@ public class CustomerActivity extends AppCompatActivity implements NavigationVie
     }
 
 
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -152,7 +154,8 @@ public class CustomerActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void queryCustomers() {
-        RealmResults<Person> results = realm.where(Person.class).sort("name").findAll();
+
+        /*RealmResults<Person> results = realm.where(Person.class).sort("name").findAll();
         if (results == null || results.size() == 0) {
             rvMain.setVisibility(View.GONE);
             llEmpty.setVisibility(View.VISIBLE);
@@ -167,7 +170,7 @@ public class CustomerActivity extends AppCompatActivity implements NavigationVie
         }
 
         // TODO: 2018-02-16 ui업데이트할것 메소드 따로 분리해서
-        tbMain.setTitle(getString(R.string.format_count_customer, mList.size()));
+        tbMain.setTitle(getString(R.string.format_count_customer, mList.size()));*/
     }
 
     private void queryCustomers(String s) {

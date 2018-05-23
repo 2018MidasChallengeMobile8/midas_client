@@ -1,10 +1,7 @@
 package com.xema.shopmanager.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -45,10 +42,18 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ListItemVi
     private Realm mRealm = null;
     private List<Person> mDataList = null;
 
+
     public PersonAdapter(Context context, Realm realm, List<Person> mDataList) {
         super();
         this.mContext = context;
         this.mRealm = realm;
+        this.mDataList = mDataList;
+    }
+
+    public PersonAdapter(Context context,List<Person> mDataList) {
+        super();
+        this.mContext = context;
+//        this.mRealm = realm;
         this.mDataList = mDataList;
     }
 

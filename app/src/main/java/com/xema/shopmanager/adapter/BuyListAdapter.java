@@ -38,7 +38,7 @@ public class BuyListAdapter extends RecyclerView.Adapter<BuyListAdapter.ViewHold
     @Override
     public void onBindViewHolder(BuyListAdapter.ViewHolder holder, int position) {
         holder.txt_date.setText(list.get(position).getDate().substring(0,10));
-        holder.txt_name.setText(list.get(position).getComment());
+        holder.txt_name.setText(String.valueOf(list.get(position).getTaking_time()));
         holder.txt_price.setText(String.valueOf(list.get(position).getPrice()));
         holder.linearLayout.setOnClickListener(v ->
         {

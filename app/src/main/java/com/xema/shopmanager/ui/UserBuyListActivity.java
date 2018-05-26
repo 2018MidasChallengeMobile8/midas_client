@@ -104,17 +104,19 @@ public class UserBuyListActivity extends AppCompatActivity {
         postOrder = new PostOrder("1","1",2,Integer.parseInt(year),
                 5);
         Log.d("buy_list",year + " // " + month);
-        retrofit2.Call<ArrayList<BuyList>> call = BaseApplication.service.getOrders("1","1",2,Integer.parseInt(year), 5);
+        retrofit2.Call<ArrayList<BuyList>> call = BaseApplication.service.getOrders
+                ("1","1",2,Integer.parseInt(year), Integer.parseInt(month));
 
         call.enqueue(new Callback<ArrayList<BuyList>>() {
             @Override
             public void onResponse(Call<ArrayList<BuyList>> call, Response<ArrayList<BuyList>> response) {
-                if(response.body() != null) {
+                if(!response.body().isEmpty()) {
                     Log.d("buy_list", response.body().get(0).getComment() + "연결 성공");
                     buy_list.addAll(response.body());
                     Log.d("ttt", response.toString());
-                    mAdapter.notifyDataSetChanged();
+
                 }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override

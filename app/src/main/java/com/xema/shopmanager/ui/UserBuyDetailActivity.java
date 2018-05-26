@@ -19,6 +19,7 @@ import com.xema.shopmanager.R;
 import com.xema.shopmanager.adapter.BuyDetailAdapter;
 import com.xema.shopmanager.common.BaseApplication;
 import com.xema.shopmanager.model.BuyDetail;
+import com.xema.shopmanager.model.BuyList;
 import com.xema.shopmanager.model.OrderItemList;
 import com.xema.shopmanager.model.OrderMenuList;
 
@@ -70,11 +71,11 @@ public class UserBuyDetailActivity extends AppCompatActivity {
             order_list = new OrderMenuList("2", "2", buyDetailEdit.getText().toString(),
                     item_list);
 
-            Call<String> call = BaseApplication.service.postOrder2(order_list);
+            Call<BuyList> call = BaseApplication.service.postOrder(order_list);
 
-            call.enqueue(new Callback<String>() {
+            call.enqueue(new Callback<BuyList>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(Call<BuyList> call, Response<BuyList> response) {
                     Log.d("order_detail", "연결 성공");
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(UserBuyDetailActivity.this);
@@ -90,7 +91,7 @@ public class UserBuyDetailActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<BuyList> call, Throwable t) {
                     Log.d("order_detail", t.getMessage());
                 }
             });

@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
+import com.xema.shopmanager.data.RestClient;
+import com.xema.shopmanager.data.RetroService;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -18,6 +20,8 @@ import io.realm.RealmConfiguration;
 
 public class BaseApplication extends Application {
     public static boolean DEBUG = false;
+    public static  RetroService service;
+    public static RestClient<RetroService> client = new RestClient<>();
 
     @Override
     public void onCreate() {
@@ -27,6 +31,7 @@ public class BaseApplication extends Application {
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
         Realm.setDefaultConfiguration(realmConfiguration);
+        service = client.getClient(RetroService.class);
 
         //벡터 이미지 활성화
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);

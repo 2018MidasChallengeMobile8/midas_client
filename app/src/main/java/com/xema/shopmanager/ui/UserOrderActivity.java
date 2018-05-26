@@ -18,6 +18,7 @@ import com.bumptech.glide.RequestManager;
 import com.xema.shopmanager.R;
 import com.xema.shopmanager.adapter.OrderCategoryAdapter;
 import com.xema.shopmanager.adapter.OrderMenuAdapter;
+import com.xema.shopmanager.common.BaseApplication;
 import com.xema.shopmanager.model.BuyDetail;
 import com.xema.shopmanager.model.OrderCategory;
 import com.xema.shopmanager.model.OrderMenu;
@@ -27,6 +28,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserOrderActivity extends AppCompatActivity {
 
@@ -46,7 +50,9 @@ public class UserOrderActivity extends AppCompatActivity {
     private ArrayList<OrderMenu> menu_list;
     private ArrayList<BuyDetail> buy_detail_list;
     private LinearLayoutManager linearLayoutManager;
+
     private int po;
+    private int cate_po;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class UserOrderActivity extends AppCompatActivity {
         category_list = new ArrayList<>();
         menu_list = new ArrayList<>();
         buy_detail_list = new ArrayList<>();
+
         ButterKnife.bind(this);
         initToolbar();
         setRecyclerView();
@@ -67,20 +74,24 @@ public class UserOrderActivity extends AppCompatActivity {
         });
     }
 
+
+    //구매 시 작동하는 메소드
     public void getNum(String num, int status) {
         int cnt = Integer.parseInt(num);
-        int price = Integer.parseInt(menu_list.get(po).getPrice());
+        int price = menu_list.get(po).getPrice();
         price = price * cnt;
         //바로 주문시
         if (status == 1) {
 
-            buy_detail_list.add(new BuyDetail(menu_list.get(po).getName(),num,String.valueOf(price)));
+            buy_detail_list.add(new BuyDetail(menu_list.get(po).getId(),
+                    menu_list.get(po).getName(),num,String.valueOf(price)));
             Intent intent = new Intent(getApplicationContext(),UserBuyDetailActivity.class);
             intent.putExtra("list",buy_detail_list);
             startActivity(intent);
 
         } else {
-            buy_detail_list.add(new BuyDetail(menu_list.get(po).getName(),num,String.valueOf(price)));
+            buy_detail_list.add(new BuyDetail(menu_list.get(po).getId(),
+                    menu_list.get(po).getName(),num,String.valueOf(price)));
 
             AlertDialog.Builder alert = new AlertDialog.Builder(UserOrderActivity.this);
             alert.setMessage("장바구니로 가겠습니까?")
@@ -101,30 +112,63 @@ public class UserOrderActivity extends AppCompatActivity {
 
 
         }
-        Log.d("user_order", num + " !!!!!!! ");
     }
 
     public void get(int position) {
         OrderDialog dialog = new OrderDialog(this, menu_list.get(position).getName()
-                , menu_list.get(position).getPrice());
+                , String.valueOf(menu_list.get(position).getPrice()));
         dialog.setListener(this::getNum);
         dialog.show();
     }
 
-    private void setRecyclerView() {
+    public void onClickCategory(int position)
+    {
+        menu_list.clear();
 
+        Call<ArrayList<OrderMenu>> call = BaseApplication.service.getMenu();
+
+        call.enqueue(new Callback<ArrayList<OrderMenu>>() {
+            @Override
+            public void onResponse(Call<ArrayList<OrderMenu>> call, Response<ArrayList<OrderMenu>> response) {
+                for(OrderMenu orderMenu : response.body())
+                {
+                    if(orderMenu.getType() == category_list.get(position).getId())
+                    {
+                        orderMenu.setCategory(category_list.get(position).getName());
+                        Log.d("user_order",orderMenu.getName());
+                        menu_list.add(orderMenu);
+                    }
+                }
+                menuAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<OrderMenu>> call, Throwable t) {
+                Log.d("user_order","menu 연결실패");
+            }
+        });
+    }
+
+    private void setRecyclerView() {
         mRequestManager = Glide.with(this);
-        mAdapter = new OrderCategoryAdapter(category_list, mRequestManager);
+        mAdapter = new OrderCategoryAdapter(category_list, mRequestManager, new OrderCategoryAdapter.onCategoryClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                cate_po = position;
+                onClickCategory(cate_po);
+            }
+        });
         menuAdapter = new OrderMenuAdapter(menu_list, mRequestManager, new OrderMenuAdapter.onMenuClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Log.d("user_order", position + "eeee");
                 po = position;
-                int num = position;
                 get(po);
             }
         });
 
+        setCategoryList();
+       // menu_list.add(new OrderMenu(0,0,"0","0",0));
+        setMenuList();
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
@@ -135,59 +179,57 @@ public class UserOrderActivity extends AppCompatActivity {
         orderListMenu.setHasFixedSize(true);
         orderListMenu.setLayoutManager(new LinearLayoutManager(this));
         orderListMenu.setAdapter(menuAdapter);
-        setCategoryList();
-        setMenuList();
+
     }
 
     private void setCategoryList() {
         category_list.clear();
 
-        category_list.add(new OrderCategory(getResources()
-                .getDrawable(R.drawable.ic_coffe), "커피/라뗴"));
-        mAdapter.notifyDataSetChanged();
-        category_list.add(new OrderCategory(getResources()
-                .getDrawable(R.drawable.ic_coffee3), "에이드/쥬스"));
-        mAdapter.notifyDataSetChanged();
-        category_list.add(new OrderCategory(getResources()
-                .getDrawable(R.drawable.ic_coffee2), "차/프라페"));
-        mAdapter.notifyDataSetChanged();
-        category_list.add(new OrderCategory(getResources()
-                .getDrawable(R.drawable.ic_coffee4), "스무디"));
-        mAdapter.notifyDataSetChanged();
-        category_list.add(new OrderCategory(getResources()
-                .getDrawable(R.drawable.ic_bakery), "베이커리"));
-        category_list.add(new OrderCategory(getResources()
-                .getDrawable(R.drawable.ic_side), "사이드"));
+        Call<ArrayList<OrderCategory>> call = BaseApplication.service.getCategory();
 
-        mAdapter.notifyDataSetChanged();
+        call.enqueue(new Callback<ArrayList<OrderCategory>>() {
+            @Override
+            public void onResponse(Call<ArrayList<OrderCategory>> call, Response<ArrayList<OrderCategory>> response) {
+
+                category_list.addAll(response.body());
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<OrderCategory>> call, Throwable t) {
+                Log.d("user_order",t.getMessage());
+            }
+        });
 
     }
 
     private void setMenuList() {
         menu_list.clear();
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("https://mcdonalds.co.kr/uploadFolder/product/prov_201501280310302840.png",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
-        menu_list.add(new OrderMenu("http://www.natuur-pop.com/_upload/coffee/20171131028_10064.jpg",
-                "커피/라뗴", "아이스티 복숭아", "5300"));
 
+        Call<ArrayList<OrderMenu>> call = BaseApplication.service.getMenu();
+
+        call.enqueue(new Callback<ArrayList<OrderMenu>>() {
+            @Override
+            public void onResponse(Call<ArrayList<OrderMenu>> call, Response<ArrayList<OrderMenu>> response) {
+                for(OrderMenu orderMenu : response.body())
+                {
+                    if(orderMenu.getType() == category_list.get(0).getId())
+                    {
+                        orderMenu.setCategory(category_list.get(0).getName());
+                        Log.d("user_order",orderMenu.getName());
+                        menu_list.add(orderMenu);
+                    }
+                }
+                menuAdapter.notifyDataSetChanged();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<OrderMenu>> call, Throwable t) {
+                Log.d("user_order","menu 연결실패");
+            }
+        });
         mAdapter.notifyDataSetChanged();
     }
 

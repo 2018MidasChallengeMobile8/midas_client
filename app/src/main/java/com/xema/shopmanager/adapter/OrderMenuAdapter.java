@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.xema.shopmanager.R;
 import com.xema.shopmanager.model.OrderMenu;
 
@@ -41,10 +42,11 @@ public class OrderMenuAdapter extends RecyclerView.Adapter<OrderMenuAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txt_category.setText(list.get(position).getCategory());
+        holder.txt_category.setText(String.valueOf(list.get(position).getCategory()));
         holder.txt_name.setText(list.get(position).getName());
-        holder.txt_price.setText(list.get(position).getPrice());
-        requestManager.load(list.get(position).getIm_url()).into(holder.im_menu);
+        holder.txt_price.setText(String.valueOf(list.get(position).getPrice()));
+        requestManager.load("http://192.168.0.30:8000"+list.get(position).getImage()).
+        apply(RequestOptions.circleCropTransform()).into(holder.im_menu);
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

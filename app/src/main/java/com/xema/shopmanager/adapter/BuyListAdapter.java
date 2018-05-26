@@ -41,10 +41,10 @@ public class BuyListAdapter extends RecyclerView.Adapter<BuyListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(BuyListAdapter.ViewHolder holder, int position) {
-        holder.txt_category.setText(list.get(position).getCategory());
+        holder.txt_category.setText(list.get(position).getType());
         holder.txt_name.setText(list.get(position).getName());
         holder.txt_price.setText(list.get(position).getPrice());
-        requestManager.load(list.get(position).getIm_url()).into(holder.im_menu);
+        requestManager.load(list.get(position).getImage()).into(holder.im_menu);
 
     }
 

@@ -8,6 +8,7 @@
 
     <string name="common_hash_shop">#샵</string>
     <string name="common_manager">매니저</string>
+    <string name="url">http://192.168.0.30:8000</string>
 
     <string name="common_loading">로딩중…</string>
     <string name="common_search">검색</string>

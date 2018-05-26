@@ -1,21 +1,21 @@
 package com.xema.shopmanager.model;
 
-import android.graphics.drawable.Drawable;
-
 public class OrderCategory {
-    private Drawable category_image;
-    private  String category_name;
+    //private String im_url;
+    private int id;
+    private String name;
 
-    public OrderCategory(Drawable category_image, String category_name) {
-        this.category_image = category_image;
-        this.category_name = category_name;
+
+    public OrderCategory(int id,String name ) {
+        this.name = name;
+        this.id = id;
     }
 
-    public Drawable getCategory_image() {
-        return category_image;
+    public String getName() {
+        return name;
     }
 
-    public String getCategory_name() {
-        return category_name;
+    public int getId() {
+        return id;
     }
 }

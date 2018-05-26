@@ -2,31 +2,48 @@ package com.xema.shopmanager.model;
 
 public class OrderMenu
 {
-    private String im_url;
-    private String category;
+    private int id;
+    private int price;
     private String name;
-    private String price;
+    private String image;
+    private int type;
+    private String category;
 
-    public OrderMenu(String im_url, String category, String name, String price) {
-        this.im_url = im_url;
-        this.category = category;
-        this.name = name;
+
+    public OrderMenu(int id, int price, String name, String image, int type, String category) {
+        this.id = id;
         this.price = price;
-    }
-
-    public String getIm_url() {
-        return im_url;
+        this.name = name;
+        this.image = image;
+        this.type = type;
+        this.category = category;
     }
 
     public String getCategory() {
         return category;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
     public String getName() {
         return name;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

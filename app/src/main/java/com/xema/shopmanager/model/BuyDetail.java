@@ -34,4 +34,8 @@ public class BuyDetail implements Serializable {
     public void setNum(String num) {
         this.num = num;
     }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 }

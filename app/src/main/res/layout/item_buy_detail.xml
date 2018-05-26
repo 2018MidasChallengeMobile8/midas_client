@@ -76,6 +76,7 @@
             android:baselineAligned="true"
             >
             <ImageView
+                android:paddingTop="5dp"
                 android:layout_width="43dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_cash"
@@ -89,7 +90,7 @@
                 android:textSize="23sp"
                 android:textColor="@color/colorYellow"/>
             <TextView
-                android:layout_marginLeft="1dp"
+                android:layout_marginLeft="2dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"

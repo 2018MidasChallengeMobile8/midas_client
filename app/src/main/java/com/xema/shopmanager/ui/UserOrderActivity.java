@@ -211,16 +211,16 @@ public class UserOrderActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<OrderMenu>>() {
             @Override
             public void onResponse(Call<ArrayList<OrderMenu>> call, Response<ArrayList<OrderMenu>> response) {
-                for(OrderMenu orderMenu : response.body())
-                {
-                    if(orderMenu.getType() == category_list.get(0).getId())
-                    {
-                        orderMenu.setCategory(category_list.get(0).getName());
-                        Log.d("user_order",orderMenu.getName());
-                        menu_list.add(orderMenu);
+                if(!response.body().isEmpty()) {
+                    for (OrderMenu orderMenu : response.body()) {
+                        if (orderMenu.getType() == category_list.get(0).getId()) {
+                            orderMenu.setCategory(category_list.get(0).getName());
+                            Log.d("user_order", orderMenu.getName());
+                            menu_list.add(orderMenu);
+                        }
                     }
+                    menuAdapter.notifyDataSetChanged();
                 }
-                menuAdapter.notifyDataSetChanged();
 
 
             }

@@ -36,34 +36,13 @@
             android:textSize="18sp"
             android:layout_weight="1"/>
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:baselineAligned="true"
-            >
-        <ImageView
-            android:paddingTop="3dp"
-            android:layout_width="28dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_cash"
-            android:scaleType="fitXY"/>
-            <TextView
-                android:id="@+id/menu_txt_price"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="5300"
-                android:textColor="@color/colorYellow"/>
-            <TextView
-                android:layout_marginLeft="1dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="원"
-                android:textColor="@color/colorYellow"
-                />
-        </LinearLayout>
+            android:text=""
+            android:textSize="15sp"
+            />
 
 
     </LinearLayout>
